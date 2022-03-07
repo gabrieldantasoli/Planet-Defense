@@ -71,7 +71,7 @@ body{
     padding: 0.5rem;
     font-size: 1.5rem;
     background-color: var(--white);
-    border-radius: 50%;
+    border-radius: 1000px;
     margin: .5rem;
     color: var(--black);
     transition: 1s;
@@ -180,12 +180,13 @@ body{
 #player{
     transition: .5s;
     position: absolute;
-    width: 15%;
+    width: 10%;
+    height: 20%;
     top: 50%;left: 43.5%;
+    max-width: 50px;
 }
 #player img{
     width: 100%;
-    max-width: 70px;
 }
 
 
