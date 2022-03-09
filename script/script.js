@@ -58,7 +58,8 @@ var dirPlayerx , dirPlayery , posPlayerx , posPlayery , velPLayer;
 
 //game controls 
 var playing ;
-var canCreateBomb , bombTime , velbomb ;
+var canCreateBomb , bombTime , velbomb , howManyBombs , createdBombs;
+var canshot , cure;
 
 
 function game() {
@@ -97,9 +98,12 @@ function game() {
         controlPLayer() ;
         controlShots() ;
         canCreateBomb += 1 ;
-        if (canCreateBomb == 50) {
+        if (canCreateBomb == bombTime) {
             createBombs() ;
             canCreateBomb = 0 ;
+        } ;
+        if (canshot <= 10 && !cure) {
+            setShots() ;
         } ;
         controlBombs() ;
         checkshotsandBombs() ;
@@ -114,25 +118,42 @@ function start() {
     dirPlayerx = 0 ; 
     dirPlayery = 0 ;
     canCreateBomb = 0 ;
+    createdBombs = 0 ;
     bombTime = 50 ;
     velbomb = 0.1 ;
-
+    howManyBombs = 150 ;
+    canshot = 50 ;
+    cure = false ;
 
     game() ;
 } ;
 
 function shot() {
-    let div = document.createElement('div') ;
-    let att1 = document.createAttribute('class') ;
-    att1.value = 'shot' ;
-    div.setAttributeNode(att1) ;
-    document.querySelector('#shots').appendChild(div) ;
-    let lastDiv = document.querySelector('#shots').lastChild ;
-    lastDiv.style.top = `${posPlayery + 1}%` ;
-    lastDiv.style.left = `${posPlayerx + (document.querySelector('#player').offsetWidth/window.innerWidth*100)/2}%` ;
+    if (canshot > 0){
+        let div = document.createElement('div') ;
+        let att1 = document.createAttribute('class') ;
+        att1.value = 'shot' ;
+        div.setAttributeNode(att1) ;
+        document.querySelector('#shots').appendChild(div) ;
+        let lastDiv = document.querySelector('#shots').lastChild ;
+        lastDiv.style.top = `${posPlayery + 1}%` ;
+        lastDiv.style.left = `${posPlayerx + (document.querySelector('#player').offsetWidth/window.innerWidth*100)/2}%` ;
+        canshot -= 1 ;
+        document.querySelector('#manyshots div').style.width = String(canshot*2)+'%' ;
+    } ;
 } ;
 
 function controlPLayer() {
+    if (cure) {
+        let player = document.querySelector('#player') ;
+        let newshots = document.querySelector('.cure') ;
+        if ((parseFloat(player.style.top.replace('%','')) < parseFloat(newshots.style.top.replace('%',''))+10 && parseFloat(player.style.top.replace('%',''))+10 > parseFloat(newshots.style.top.replace('%',''))) && (parseFloat(player.style.left.replace('%',''))+10 > parseFloat(newshots.style.left.replace('%','')) && parseFloat(player.style.left.replace('%','')) < parseFloat(newshots.style.left.replace('%',''))+10)) {
+            canshot = 50 ;
+            cure = false ;
+            document.querySelector('#manyshots div').style.width = String(canshot*2)+'%' ;
+            newshots.remove() ;
+        }
+    } ;
     posPlayerx += velPLayer * dirPlayerx ;
     posPlayery += velPLayer * dirPlayery ;
     if (posPlayerx >= 100 - document.querySelector('#player').offsetWidth/window.innerWidth*100) {
@@ -162,18 +183,21 @@ function controlShots(){
 }
 
 function createBombs() {
-    let bomb = document.createElement('div') ;
-    let img = document.createElement('img') ;
-    let att1 = document.createAttribute('class') ;
-    let att2 = document.createAttribute('src') ;
-    att2.value = '../images/missel.gif' ;
-    att1.value = 'bomb' ;
-    img.setAttributeNode(att2) ;
-    bomb.setAttributeNode(att1) ;
-    bomb.style.top = '-10%' ;
-    bomb.style.left = `${Math.random()*91}%` ;
-    bomb.append(img) ;
-    document.querySelector('#bombs').appendChild(bomb) ;
+    if (createdBombs < howManyBombs) {
+        let bomb = document.createElement('div') ;
+        let img = document.createElement('img') ;
+        let att1 = document.createAttribute('class') ;
+        let att2 = document.createAttribute('src') ;
+        att2.value = '../images/missel.gif' ;
+        att1.value = 'bomb' ;
+        img.setAttributeNode(att2) ;
+        bomb.setAttributeNode(att1) ;
+        bomb.style.top = '-10%' ;
+        bomb.style.left = `${Math.random()*91}%` ;
+        bomb.append(img) ;
+        document.querySelector('#bombs').appendChild(bomb) ;
+        createdBombs += 1 ;
+    }
 } ;
 
 function controlBombs() {
@@ -191,10 +215,28 @@ function checkshotsandBombs() {
     let shots = document.querySelectorAll('#shots .shot') ;
     bombs.forEach(BOMB => {
         shots.forEach(SHOT => {
-            if (parseFloat(BOMB.style.top.replace('%',''))+10 >= parseFloat(SHOT.style.top.replace('%',''))+4 && ((parseFloat(SHOT.style.left.replace('%','')) >= parseFloat(BOMB.style.left.replace('%',''))) && (parseFloat(SHOT.style.left.replace('%',''))+2 <= parseFloat(BOMB.style.left.replace('%',''))+10))) {
+            if ((parseFloat(BOMB.style.top.replace('%',''))+10 >= parseFloat(SHOT.style.top.replace('%',''))+4 &&parseFloat(BOMB.style.top.replace('%','')) <= parseFloat(SHOT.style.top.replace('%',''))-4) && ((parseFloat(SHOT.style.left.replace('%','')) >= parseFloat(BOMB.style.left.replace('%',''))) && (parseFloat(SHOT.style.left.replace('%',''))+2 <= parseFloat(BOMB.style.left.replace('%',''))+10))) {
                 BOMB.remove() ;
                 SHOT.remove() ;
             } ;
         }) ;
     }) ;
 };
+
+function setShots() {
+    let newshots = document.createElement('div') ;
+    let att1 = document.createAttribute('class') ;
+    att1.value = 'cure' ;
+    newshots.setAttributeNode(att1) ;
+    let i = document.createElement('i') ;
+    let att2 = document.createAttribute('class') ;
+    att2.value = 'fas fa-meteor' ;
+    i.setAttributeNode(att2) ;
+    newshots.appendChild(i) ;
+    let posx = parseInt(Math.random()*90) ;
+    let posy = parseInt(Math.random()*90) ;
+    newshots.style.top = String(posy)+'%' ;
+    newshots.style.left = String(posx)+'%' ;
+    document.querySelector('#defensePlanet').appendChild(newshots) ;
+    cure = true ;
+} ;
