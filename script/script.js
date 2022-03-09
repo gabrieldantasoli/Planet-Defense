@@ -60,6 +60,7 @@ var dirPlayerx , dirPlayery , posPlayerx , posPlayery , velPLayer;
 var playing ;
 var canCreateBomb , bombTime , velbomb , howManyBombs , createdBombs;
 var canshot , cure;
+var planetLife , dangerPlanet;
 
 
 function game() {
@@ -79,6 +80,30 @@ function game() {
             }
             if (key == 13) {
                 shot() ;
+            } ;
+        }) ;
+        window.addEventListener('touchstart',function(e) {
+            let key = e.target.id;
+            if (key == 'actionLeft') {
+                dirPlayerx = -1 ;
+            }else if (key == 'actionDown') {
+                dirPlayery = 1 ;
+            }else if (key == 'actionRight') {
+                dirPlayerx = 1 ;
+            }else if (key == 'actionUp') {
+                dirPlayery = -1 ;
+            }
+            if (key == 'actionShot') {
+                shot() ;
+            } ;
+        }) ;
+        window.addEventListener('touchend',function(e) {
+            let key = e.target.id ;
+            if (key == 'actionLeft' || key == 'actionRight') {
+                dirPlayerx = 0 ;
+            } ;
+            if (key == 'actionDown' || key == 'actionUp') {
+                dirPlayery = 0 ;
             } ;
         }) ;
         window.addEventListener('keyup',function(e) {
@@ -108,7 +133,15 @@ function game() {
         controlBombs() ;
         checkshotsandBombs() ;
     } ;
-    frame = requestAnimationFrame(game) ;
+    if (planetLife > 0) {
+        frame = requestAnimationFrame(game) ;
+        //telaperdeu
+    } ;
+    if (playing && createdBombs == howManyBombs && document.querySelectorAll('#bombs .bomb').length == 0) {
+        //telaganhou
+    } ;
+    
+    
 } ;
 
 function start() {
@@ -124,6 +157,8 @@ function start() {
     howManyBombs = 150 ;
     canshot = 50 ;
     cure = false ;
+    planetLife = 100 ;
+    dangerPlanet = 10 ;
 
     game() ;
 } ;
@@ -206,6 +241,8 @@ function controlBombs() {
         item.style.top = `${parseFloat(item.style.top.replace('%',''))+velbomb}%` ;
         if (parseFloat(item.style.top.replace('%','')) > 101) {
             item.remove() ;
+            planetLife -= dangerPlanet ;
+            document.querySelector('#planetLife div').style.width = String(planetLife)+'%' ;
         } ;
     }) ;
 } ;

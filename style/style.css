@@ -252,8 +252,8 @@ body{
 .cure{
     position: absolute;
     z-index: -1;
-    width: 10vw;
-    height: 10vw;
+    width: 8vw;
+    height: 8vw;
     border-radius: 10px;
     display: flex;
     justify-content: center;
@@ -262,7 +262,31 @@ body{
     color: var(--black);
     background-color: rgba(219, 164, 12, 0.835);
 }
-
+#TopBottomShot{
+    position: absolute;
+    bottom: 2%;left: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+}
+#RightLeft{
+    display: flex;
+    position: absolute;
+    bottom: 2%;right: 0;
+    z-index: 10000;
+}
+#mobileControls i{
+    width: 10vw;
+    height: 10vw;
+    max-width: 40px;
+    max-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--white);
+    margin: .5rem;
+    opacity: 0.7;
+}
 
 
 @media (orientation:portrait){
