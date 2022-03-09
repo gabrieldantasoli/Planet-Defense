@@ -54,13 +54,14 @@ function animationPlayerDown() {
 var frame ;
 
 //player controls
-var dirPlayerx , dirPlayery , posPlayerx , posPlayery , velPLayer;
+var dirPlayerx , dirPlayery , posPlayerx , posPlayery , velPLayer , playerLife;
 
 //game controls 
 var playing ;
 var canCreateBomb , bombTime , velbomb , howManyBombs , createdBombs;
 var canshot , cure;
 var planetLife , dangerPlanet;
+var colisionDamage ;
 
 
 function game() {
@@ -133,15 +134,15 @@ function game() {
         controlBombs() ;
         checkshotsandBombs() ;
     } ;
-    if (planetLife > 0) {
+    if (planetLife > 0 && playerLife > 0) {
         frame = requestAnimationFrame(game) ;
-        //telaperdeu
     } ;
     if (playing && createdBombs == howManyBombs && document.querySelectorAll('#bombs .bomb').length == 0) {
         //telaganhou
     } ;
-    
-    
+    if (planetLife <= 0 || playerLife <= 0) {
+        //telaperdeu
+    }
 } ;
 
 function start() {
@@ -159,6 +160,8 @@ function start() {
     cure = false ;
     planetLife = 100 ;
     dangerPlanet = 10 ;
+    colisionDamage = 20 ;
+    playerLife = 100 ;
 
     game() ;
 } ;
@@ -189,6 +192,20 @@ function controlPLayer() {
             newshots.remove() ;
         }
     } ;
+    let bombs = document.querySelectorAll('#bombs .bomb') ;
+    let player = document.querySelector('#player') ;
+    bombs.forEach(item => {
+        if ((
+            parseFloat(player.style.top.replace('%','')) <= parseFloat(item.style.top.replace('%',''))+5 && parseFloat(player.style.top.replace('%',''))+5 >= parseFloat(item.style.top.replace('%',''))) && (parseFloat(player.style.left.replace('%',''))+5 >= parseFloat(item.style.left.replace('%','')) && parseFloat(player.style.left.replace('%','')) <= parseFloat(item.style.left.replace('%',''))+5)) {
+            console.log('colision')
+            item.remove() ;
+            playerLife -= colisionDamage ;
+            document.querySelector('#playerLife div').style.width = String(playerLife)+'%' ;
+            if (playerLife <= 0) {
+                playing = false ;
+            } ;
+        } ;
+    }) ;
     posPlayerx += velPLayer * dirPlayerx ;
     posPlayery += velPLayer * dirPlayery ;
     if (posPlayerx >= 100 - document.querySelector('#player').offsetWidth/window.innerWidth*100) {
