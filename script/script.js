@@ -58,6 +58,7 @@ var dirPlayerx , dirPlayery , posPlayerx , posPlayery , velPLayer;
 
 //game controls 
 var playing ;
+var canCreateBomb , bombTime , velbomb ;
 
 
 function game() {
@@ -95,6 +96,13 @@ function game() {
     if (playing) {
         controlPLayer() ;
         controlShots() ;
+        canCreateBomb += 1 ;
+        if (canCreateBomb == 50) {
+            createBombs() ;
+            canCreateBomb = 0 ;
+        } ;
+        controlBombs() ;
+        checkshotsandBombs() ;
     } ;
     frame = requestAnimationFrame(game) ;
 } ;
@@ -105,6 +113,9 @@ function start() {
     velPLayer = 0.6 ;
     dirPlayerx = 0 ; 
     dirPlayery = 0 ;
+    canCreateBomb = 0 ;
+    bombTime = 50 ;
+    velbomb = 0.1 ;
 
 
     game() ;
@@ -149,3 +160,41 @@ function controlShots(){
         }
     }) ;
 }
+
+function createBombs() {
+    let bomb = document.createElement('div') ;
+    let img = document.createElement('img') ;
+    let att1 = document.createAttribute('class') ;
+    let att2 = document.createAttribute('src') ;
+    att2.value = '../images/missel.gif' ;
+    att1.value = 'bomb' ;
+    img.setAttributeNode(att2) ;
+    bomb.setAttributeNode(att1) ;
+    bomb.style.top = '-10%' ;
+    bomb.style.left = `${Math.random()*91}%` ;
+    bomb.append(img) ;
+    document.querySelector('#bombs').appendChild(bomb) ;
+} ;
+
+function controlBombs() {
+    let bombs = document.querySelectorAll('#bombs .bomb') ;
+    bombs.forEach(item => {
+        item.style.top = `${parseFloat(item.style.top.replace('%',''))+velbomb}%` ;
+        if (parseFloat(item.style.top.replace('%','')) > 101) {
+            item.remove() ;
+        } ;
+    }) ;
+} ;
+
+function checkshotsandBombs() {
+    let bombs = document.querySelectorAll('#bombs .bomb') ;
+    let shots = document.querySelectorAll('#shots .shot') ;
+    bombs.forEach(BOMB => {
+        shots.forEach(SHOT => {
+            if (parseFloat(BOMB.style.top.replace('%',''))+10 >= parseFloat(SHOT.style.top.replace('%',''))+4 && ((parseFloat(SHOT.style.left.replace('%','')) >= parseFloat(BOMB.style.left.replace('%',''))) && (parseFloat(SHOT.style.left.replace('%',''))+2 <= parseFloat(BOMB.style.left.replace('%',''))+10))) {
+                BOMB.remove() ;
+                SHOT.remove() ;
+            } ;
+        }) ;
+    }) ;
+};
