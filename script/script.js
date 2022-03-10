@@ -62,6 +62,10 @@ var canCreateBomb , bombTime , velbomb , howManyBombs , createdBombs;
 var canshot , cure;
 var planetLife , dangerPlanet;
 var colisionDamage ;
+var level ;
+
+    
+
 
 
 function game() {
@@ -146,22 +150,74 @@ function game() {
 } ;
 
 function start() {
+    startlevel = document.querySelector('.level.active.game')
+    startlevel = parseInt(startlevel.getAttribute('data-level')) ;
+    alert(startlevel)
     posPlayerx = 45 ;
     posPlayery = 80 ;
-    velPLayer = 0.6 ;
     dirPlayerx = 0 ; 
     dirPlayery = 0 ;
     canCreateBomb = 0 ;
     createdBombs = 0 ;
-    bombTime = 50 ;
-    velbomb = 0.1 ;
-    howManyBombs = 150 ;
-    canshot = 50 ;
     cure = false ;
     planetLife = 100 ;
-    dangerPlanet = 10 ;
-    colisionDamage = 20 ;
     playerLife = 100 ;
+    canshot = 50 ;
+    
+    if (startlevel > 6) {
+        startlevel = 0 ;
+    } ; 
+    switch (startlevel) {
+        case 1:
+            velPLayer = 0.6 ;
+            bombTime = 50 ;
+            velbomb = 0.1 ;
+            howManyBombs = 150 ;
+            dangerPlanet = 5 ;
+            colisionDamage = 20 ;
+            break;
+        case 2:
+            velPLayer = 0.8 ;
+            bombTime = 45 ;
+            velbomb = 0.12 ;
+            howManyBombs = 200 ;
+            dangerPlanet = 10 ;
+            colisionDamage = 24 ;
+            break;
+        case 3:
+            velPLayer = 1 ;
+            bombTime = 50 ;
+            velbomb = 0.13 ;
+            howManyBombs = 250 ;
+            canshot = 50 ;
+            dangerPlanet = 15 ;
+            colisionDamage = 27 ;
+            break;
+        case 4:
+            velPLayer = 1.1 ;
+            bombTime = 50 ;
+            velbomb = 0.14 ;
+            howManyBombs = 300 ;
+            dangerPlanet = 20 ;
+            colisionDamage = 30 ;
+            break;
+        case 5:
+            velPLayer = 1.2 ;
+            bombTime = 50 ;
+            velbomb = 0.15 ;
+            howManyBombs = 350 ;
+            dangerPlanet = 25 ;
+            colisionDamage = 33 ;
+            break;
+        case 6:
+            velPLayer = 1.25 ;
+            bombTime = 50 ;
+            velbomb = 0.2 ;
+            howManyBombs = 400 ;
+            dangerPlanet = 30 ;
+            colisionDamage = 36 ;
+            break;
+    }
 
     game() ;
 } ;
@@ -294,3 +350,38 @@ function setShots() {
     document.querySelector('#defensePlanet').appendChild(newshots) ;
     cure = true ;
 } ;
+
+
+// when win , when lose , when start
+var changeLevels ;
+
+function activeLevels() {
+    level = !localStorage.getItem('level') ? localStorage.setItem('level',parseInt(0)) : localStorage.getItem('level') ;
+    let activedLevels = document.querySelectorAll('.level') ;
+    for (var i = 1 ; i < level ; i++) {
+        activedLevels[i].classList.add('active') ;
+        if (document.querySelector('.level i')) {
+            document.querySelector('.level i').remove() ;
+        } ;
+    } ;
+} ;
+activeLevels() ;
+setChangedLevels() ;
+
+function setChangedLevels(){
+    changeLevels = document.querySelectorAll('.level.active') ;
+    changeLevels.forEach(item => item.addEventListener('click',changelevels)) ;
+} ;
+
+function changelevels(e) {
+    let key = e.target.getAttribute('data-level')-1
+    let add = document.querySelectorAll('.level.active')[key] ;
+    changeLevels.forEach(item => item.classList.remove('game')) ;
+    add.classList.add('game') ;
+} ;
+
+function setCurrentyLevel(){
+    changeLevels.forEach(item => item.classList.remove('game')) ;
+    document.querySelectorAll('.level.active')[parseInt(localStorage.getItem('level'))-1].classList.add('game') ;
+}
+setCurrentyLevel() ; 
