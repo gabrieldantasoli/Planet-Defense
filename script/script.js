@@ -3,6 +3,7 @@ var anmtPlayer , anmtPlayerDown , anmtPlanet ;
 var startControl = false ;
 
 document.querySelector('#start').addEventListener('click',function() {
+    window.scrollTo(0,0) ;
     document.querySelector('#menu').style.display = 'none' ;
     document.querySelector('body').classList.add('active') ;
     document.querySelector('#mainHeader').style.display = 'none' ;
@@ -142,17 +143,27 @@ function game() {
         frame = requestAnimationFrame(game) ;
     } ;
     if (playing && createdBombs == howManyBombs && document.querySelectorAll('#bombs .bomb').length == 0) {
-        //telaganhou
+        alert('ok')
+        document.querySelector('#nextLevel0').textContent = parseInt(localStorage.getItem('level'))+1 ;
+        document.querySelector('#wonscreen').style.display = 'flex' ;
+        playing = false ;
+        if (level < 6) {
+            let level = parseInt(localStorage.getItem('level'))+1 ;
+            localStorage.setItem('level',level) ;
+            document.querySelector('#defensePlanet').style.display = 'none' ;
+            document.querySelector('#menu').style.display = 'flex' ;
+        } ;
+
     } ;
-    if (planetLife <= 0 || playerLife <= 0) {
-        //telaperdeu
+    if (planetLife <= 0 || playerLife <= 0 && !playing) {
+        document.querySelector('#loseScreen').style.display = 'flex' ;
+        playing = false ;
     }
 } ;
 
 function start() {
     startlevel = document.querySelector('.level.active.game')
     startlevel = parseInt(startlevel.getAttribute('data-level')) ;
-    alert(startlevel)
     posPlayerx = 45 ;
     posPlayery = 80 ;
     dirPlayerx = 0 ; 
@@ -253,7 +264,6 @@ function controlPLayer() {
     bombs.forEach(item => {
         if ((
             parseFloat(player.style.top.replace('%','')) <= parseFloat(item.style.top.replace('%',''))+5 && parseFloat(player.style.top.replace('%',''))+5 >= parseFloat(item.style.top.replace('%',''))) && (parseFloat(player.style.left.replace('%',''))+5 >= parseFloat(item.style.left.replace('%','')) && parseFloat(player.style.left.replace('%','')) <= parseFloat(item.style.left.replace('%',''))+5)) {
-            console.log('colision')
             item.remove() ;
             playerLife -= colisionDamage ;
             document.querySelector('#playerLife div').style.width = String(playerLife)+'%' ;
@@ -356,7 +366,7 @@ function setShots() {
 var changeLevels ;
 
 function activeLevels() {
-    level = !localStorage.getItem('level') ? localStorage.setItem('level',parseInt(0)) : localStorage.getItem('level') ;
+    level = localStorage.getItem('level') ;
     let activedLevels = document.querySelectorAll('.level') ;
     for (var i = 1 ; i < level ; i++) {
         activedLevels[i].classList.add('active') ;
@@ -383,5 +393,13 @@ function changelevels(e) {
 function setCurrentyLevel(){
     changeLevels.forEach(item => item.classList.remove('game')) ;
     document.querySelectorAll('.level.active')[parseInt(localStorage.getItem('level'))-1].classList.add('game') ;
+    
 }
 setCurrentyLevel() ; 
+
+document.querySelector('#closeWon').addEventListener('click',function() {
+    window.location.href='index.html' ;
+}) ;
+document.querySelector('#closeLose').addEventListener('click',function() {
+    window.location.href='index.html' ;
+}) ;
