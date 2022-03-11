@@ -50,7 +50,7 @@ function animationPlayerDown() {
 } ;
 //ends animation
 
-if (localStorage.getItem('level') == null) {
+if (!localStorage.getItem('level')) {
     localStorage.setItem('level',1) ;
 } ;
 
