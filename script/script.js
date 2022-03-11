@@ -50,6 +50,10 @@ function animationPlayerDown() {
 } ;
 //ends animation
 
+if (localStorage.getItem('level') == null) {
+    localStorage.setItem('level',1) ;
+} ;
+
 //game start´s
 //resquesting animationFrame
 var frame ;
@@ -143,7 +147,6 @@ function game() {
         frame = requestAnimationFrame(game) ;
     } ;
     if (playing && createdBombs == howManyBombs && document.querySelectorAll('#bombs .bomb').length == 0) {
-        alert('ok')
         document.querySelector('#nextLevel0').textContent = parseInt(localStorage.getItem('level'))+1 ;
         document.querySelector('#wonscreen').style.display = 'flex' ;
         playing = false ;
