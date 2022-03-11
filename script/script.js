@@ -147,16 +147,13 @@ function game() {
         frame = requestAnimationFrame(game) ;
     } ;
     if (playing && createdBombs == howManyBombs && document.querySelectorAll('#bombs .bomb').length == 0) {
-        document.querySelector('#nextLevel0').textContent = parseInt(localStorage.getItem('level'))+1 ;
-        document.querySelector('#wonscreen').style.display = 'flex' ;
-        playing = false ;
-        if (level < 6) {
+        if (parseInt(document.querySelector('.level.active.game').getAttribute('data-level')) == parseInt(localStorage.getItem('level'))) {
             let level = parseInt(localStorage.getItem('level'))+1 ;
             localStorage.setItem('level',level) ;
-            document.querySelector('#defensePlanet').style.display = 'none' ;
-            document.querySelector('#menu').style.display = 'flex' ;
-        } ;
-
+        }
+        document.querySelector('#wonscreen').style.display = 'flex' ;
+        playing = false ;
+        document.querySelector('#nextLevel0').textContent = localStorage.getItem('level') ;
     } ;
     if (planetLife <= 0 || playerLife <= 0 && !playing) {
         document.querySelector('#loseScreen').style.display = 'flex' ;
@@ -405,4 +402,17 @@ document.querySelector('#closeWon').addEventListener('click',function() {
 }) ;
 document.querySelector('#closeLose').addEventListener('click',function() {
     window.location.href='index.html' ;
+}) ;
+
+document.querySelector('#changeControls').addEventListener('click',function() {
+    let change = document.querySelector('#change') ;
+    let display = document.querySelector('#mobileControls') ;
+    if (change.classList == 'fas fa-desktop') {
+        change.classList='fas fa-mobile-alt' ;
+        display.style.display = 'flex' ;
+    }else if (change.classList == 'fas fa-mobile-alt') {
+        change.classList='fas fa-desktop' ;
+        display.style.display = 'none' ;
+    }
+    
 }) ;
