@@ -50,7 +50,7 @@ function animationPlayerDown() {
 } ;
 //ends animation
 
-if (localStorage.getItem('level') == null) {
+if (!localStorage.getItem('level')) {
     localStorage.setItem('level',1) ;
 } ;
 
@@ -403,6 +403,7 @@ document.querySelector('#closeWon').addEventListener('click',function() {
 document.querySelector('#closeLose').addEventListener('click',function() {
     window.location.href='index.html' ;
 }) ;
+
 
 document.querySelector('#changeControls').addEventListener('click',function() {
     let change = document.querySelector('#change') ;
