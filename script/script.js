@@ -306,7 +306,7 @@ function createBombs() {
         let img = document.createElement('img') ;
         let att1 = document.createAttribute('class') ;
         let att2 = document.createAttribute('src') ;
-        att2.value = '../images/missel.gif' ;
+        att2.value = 'images/missel.gif' ;
         att1.value = 'bomb' ;
         img.setAttributeNode(att2) ;
         bomb.setAttributeNode(att1) ;
